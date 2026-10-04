@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "dare-todo",
+    "name": "Dare Todo",
     "slug": "dare-todo",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,24 +8,16 @@
     "scheme": "daretodo",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
-      "infoPlist": {
-        "NSSpeechRecognitionUsageDescription": "Dare Todo uses speech recognition to turn your voice into tasks.",
-        "NSMicrophoneUsageDescription": "Dare Todo uses the microphone to add tasks by voice."
-      }
+      "icon": "./assets/expo.icon"
     },
     "android": {
       "package": "com.dare.daretodo",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#6C5CE7",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false,
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
@@ -36,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#6C5CE7",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
@@ -48,21 +40,19 @@
         {
           "microphonePermission": "Dare Todo uses the microphone to add tasks by voice.",
           "speechRecognitionPermission": "Dare Todo uses speech recognition to turn your voice into tasks.",
-          "androidSpeechServicePackages": [
-            "com.google.android.googlequicksearchbox"
-          ]
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#6C5CE7"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "7f2be681-864f-4c14-99d5-106313bf147c"
-      }
     }
   }
 }

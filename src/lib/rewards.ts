@@ -1,10 +1,12 @@
-import { Alert } from 'react-native';
-import type { SQLiteDatabase } from 'expo-sqlite';
 import { awardXp, checkBadges, getTotalXp, levelInfo, revokeXp } from '@/db/xp';
+import * as Haptics from 'expo-haptics';
+import type { SQLiteDatabase } from 'expo-sqlite';
+import { Alert } from 'react-native';
 
 export async function reward(db: SQLiteDatabase, key: string, amount: number) {
   const before = levelInfo(await getTotalXp(db)).level;
-  await awardXp(db, key, amount);
+  const awarded = await awardXp(db, key, amount);
+  if (awarded) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
   const after = levelInfo(await getTotalXp(db)).level;
   const badges = await checkBadges(db);
 

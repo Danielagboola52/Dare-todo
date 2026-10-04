@@ -1,19 +1,20 @@
+import { Chip } from '@/components/Chip';
+import { getTasks, type Task } from '@/db/tasks';
+import { getTodayFocusSeconds } from '@/db/timeLogs';
+import { useNow } from '@/hooks/useNow';
+import { useToday } from '@/hooks/useToday';
+import { fmtClock, fmtDuration } from '@/lib/format';
+import { schedulePomodoroAlert } from '@/lib/notify';
+import { finishTimer } from '@/lib/timer';
+import { useTimer } from '@/store/timer';
+import { useTheme } from '@/theme/useTheme';
+import { useFocusEffect } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, Vibration, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
-import { useTheme } from '@/theme/useTheme';
-import { useToday } from '@/hooks/useToday';
-import { useNow } from '@/hooks/useNow';
-import { useTimer } from '@/store/timer';
-import { finishTimer } from '@/lib/timer';
-import { fmtClock, fmtDuration } from '@/lib/format';
-import { getTasks, type Task } from '@/db/tasks';
-import { getTodayFocusSeconds } from '@/db/timeLogs';
-import { Chip } from '@/components/Chip';
 
-const OPTIONS = [15, 25, 50];
+const OPTIONS = [1, 15, 25, 50];
 
 export default function Focus() {
   const db = useSQLiteContext();
@@ -47,10 +48,12 @@ export default function Focus() {
     Vibration.vibrate([0, 400, 200, 400]);
     finishTimer(db).then(() => {
       if (wasFocus) {
+        const breakSec = (focusMin >= 50 ? 10 : 5) * 60;
         start({
           kind: 'pomodoro', phase: 'break', taskId: taskForBreak,
-          startedAt: Date.now(), durationSec: (focusMin >= 50 ? 10 : 5) * 60,
+          startedAt: Date.now(), durationSec: breakSec,
         });
+        schedulePomodoroAlert(breakSec, 'Break over ⏰', 'Ready for the next focus session?');
       }
       load();
     });
@@ -113,12 +116,13 @@ export default function Focus() {
               {selected && <Text style={{ color: colors.subtext }}>{selected.title}</Text>}
 
               {!pomo &&
-                btn('Start focus', () =>
+                btn('Start focus', () => {
                   start({
                     kind: 'pomodoro', phase: 'focus', taskId,
                     startedAt: Date.now(), durationSec: minutes * 60,
-                  })
-                )}
+                  });
+                  schedulePomodoroAlert(minutes * 60, 'Focus session done 🎯', 'Nice work. Time for a break.');
+                })}
               {pomo && btn(pomo.phase === 'focus' ? 'Stop & save' : 'Skip break', () => finishTimer(db).then(load), false)}
             </View>
           </>

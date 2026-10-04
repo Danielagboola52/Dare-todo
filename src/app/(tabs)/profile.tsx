@@ -1,11 +1,12 @@
+import { ReminderToggle } from '@/components/ReminderToggle';
+import { BADGES, getEarnedBadges, getTotalXp, levelInfo } from '@/db/xp';
+import { useSettings, type ThemeMode } from '@/store/settings';
+import { useTheme } from '@/theme/useTheme';
+import { useFocusEffect } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
-import { useTheme } from '@/theme/useTheme';
-import { useSettings, type ThemeMode } from '@/store/settings';
-import { BADGES, getEarnedBadges, getTotalXp, levelInfo } from '@/db/xp';
 
 const modes: { key: ThemeMode; label: string }[] = [
   { key: 'system', label: 'System' },
@@ -77,6 +78,8 @@ export default function Profile() {
             );
           })}
         </View>
+
+        <ReminderToggle />
 
         <Text style={{ marginTop: 24, marginBottom: 10, color: colors.subtext }}>Appearance</Text>
         <View style={{ flexDirection: 'row', gap: 10 }}>
